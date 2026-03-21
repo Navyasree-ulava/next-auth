@@ -35,7 +35,11 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-
+      
+      {/* 🔵 Subtle Glow */}
+      <div className="absolute w-[400px] h-[400px] bg-indigo-500/20 blur-3xl rounded-full top-[-100px] left-[-100px]" />
+      <div className="absolute w-[300px] h-[300px] bg-cyan-500/20 blur-3xl rounded-full bottom-[-100px] right-[-100px]" />
+      
       {/* 🧊 Glass Card */}
       <div className="relative z-10 w-[360px] p-8 rounded-2xl 
       bg-black/40 backdrop-blur-2xl border border-white/20 
