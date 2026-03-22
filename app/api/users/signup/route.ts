@@ -1,11 +1,12 @@
 import connectToDatabase from "@/db/db";
+import { sendEmail } from "@/helpers/mailer";
 import User from "@/models/userModel";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    await connectToDatabase(); // ✅ move inside function
+    await connectToDatabase();
 
     const reqBody = await request.json();
     const { username, email, password } = reqBody;
@@ -18,8 +19,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // ✅ normalize email (IMPORTANT)
+    const normalizedEmail = email.toLowerCase();
+
     // ✅ check existing user
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: normalizedEmail });
 
     if (existingUser) {
       return NextResponse.json(
@@ -31,19 +35,31 @@ export async function POST(request: NextRequest) {
     // ✅ hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ create user (cleaner way)
-    await User.create({
+    // ✅ create user
+    const savedUser = await User.create({
       username,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
+      isVerified: false,
+    });
+
+    // ✅ send verification email
+    await sendEmail({
+      email: normalizedEmail,
+      emailType: "VERIFY",
+      userId: savedUser._id,
     });
 
     return NextResponse.json(
-      { message: "User created successfully" },
+      {
+        message: "User created successfully. Please verify your email.",
+      },
       { status: 201 }
     );
 
   } catch (error: any) {
+    console.error("Signup error:", error); // ✅ debug
+
     return NextResponse.json(
       { error: error.message || "Internal Server Error" },
       { status: 500 }

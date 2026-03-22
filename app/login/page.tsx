@@ -25,7 +25,7 @@ export default function LoginPage() {
       console.log(user);
 
       toast.success("Login successful!");
-      router.push("/profile/123"); // Redirect to profile page (replace with actual user ID)
+      router.push("/profile"); // Redirect to profile page (replace with actual user ID)
     } catch (error: any) {
       toast.error("Login failed");
     } finally {

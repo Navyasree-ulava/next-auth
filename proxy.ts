@@ -6,7 +6,7 @@ export function proxy(request: NextRequest) {
 
   const token = request.cookies.get("token")?.value;
 
-  const isPublicPath = path === "/login" || path === "/signup";
+  const isPublicPath = path === "/login" || path === "/signup" || path === "/verifyemail";
 
   // ✅ Logged-in user → block login/signup
   if (token && isPublicPath) {
@@ -23,5 +23,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/profile/:path*", "/login", "/signup", "/logout"],
+  matcher: ["/", "/profile/:path*", "/login", "/signup", "/logout", "/verifyemail"],
 };
