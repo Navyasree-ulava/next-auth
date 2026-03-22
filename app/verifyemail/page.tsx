@@ -19,9 +19,15 @@ export default function VerifyEmailPage() {
       toast.success(response.data.message);
       setVerified(true);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError(true);
-      toast.error(error.response?.data?.error || "Verification failed");
+      let message = "Verification failed";
+      if (axios.isAxiosError(error)) {
+        message = error.response?.data?.error || message;
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
+      toast.error(message);
     } finally {
       setLoading(false);
     }

@@ -21,13 +21,13 @@ export default function LoginPage() {
     try {
       setLoading(true);
 
-      const response = axios.post("/api/users/login", user);
-      console.log(user);
+      const response = await axios.post("/api/users/login", user);
+      console.log(response.data);
 
       toast.success("Login successful!");
       router.push("/profile"); // Redirect to profile page (replace with actual user ID)
     } catch (error: any) {
-      toast.error("Login failed");
+      toast.error(error.response?.data?.error || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -95,16 +95,21 @@ export default function LoginPage() {
             {loading ? "Logging in..." : "Log In"}
           </button>
 
-          {/* Link */}
-          <Link
-            href="/signup"
-            className="text-center text-gray-300 text-sm hover:text-white transition"
-          >
-            Don’t have an account?{" "}
-            <span className="text-indigo-300 hover:underline">
+              <div className="flex justify-between mt-3 text-sm">
+            <Link
+              href="/forgotpassword"
+              className="text-cyan-300 hover:underline"
+            >
+              Forgot Password?
+            </Link>
+
+            <Link
+              href="/signup"
+              className="text-gray-300 hover:text-white"
+            >
               Sign Up
-            </span>
-          </Link>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

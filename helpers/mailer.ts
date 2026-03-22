@@ -3,7 +3,13 @@ import User from "../models/userModel";
 import bcrypt from "bcryptjs";
 import crypto from "crypto"; // for raw token
 
-export async function sendEmail({ email, emailType, userId }: any) {
+type SendEmailParams = {
+  email: string;
+  emailType: "VERIFY" | "RESET";
+  userId: string;
+};
+
+export async function sendEmail({ email, emailType, userId }: SendEmailParams) {
   try {
     // ✅ generate raw token
     const rawToken = crypto.randomBytes(32).toString("hex");
@@ -33,7 +39,7 @@ export async function sendEmail({ email, emailType, userId }: any) {
     });
 
     const url = `${process.env.DOMAIN}/${
-      emailType === "VERIFY" ? "verifyemail" : "reset-password"
+      emailType === "VERIFY" ? "verifyemail" : "resetPassword"
     }?token=${rawToken}`;
 
     const mailOptions = {
@@ -58,7 +64,8 @@ export async function sendEmail({ email, emailType, userId }: any) {
 
     return mailresponse;
 
-  } catch (error: any) {
-    throw new Error("Failed to send email: " + error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to send email";
+    throw new Error("Failed to send email: " + message);
   }
 }
