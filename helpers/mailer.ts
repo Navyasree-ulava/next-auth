@@ -11,10 +11,10 @@ type SendEmailParams = {
 
 export async function sendEmail({ email, emailType, userId }: SendEmailParams) {
   try {
-    // ✅ generate raw token
+    // generate raw token
     const rawToken = crypto.randomBytes(32).toString("hex");
 
-    // ✅ hash it using bcrypt
+    // hash it using bcrypt
     const hashedToken = await bcrypt.hash(rawToken, 10);
 
     if (emailType === "VERIFY") {
